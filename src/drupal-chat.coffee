@@ -1,6 +1,6 @@
 redis         = require "redis"
 
-chatApp = (config) ->
+ChatApp = (config) ->
   this.start = ->
     console.log "Chat server is listening on port #{config.port}"
   this.stop = ->
@@ -10,4 +10,4 @@ chatApp = (config) ->
 
 
 module.exports = (config) ->
-  return new chatApp(config)
+  return new ChatApp(config)

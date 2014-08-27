@@ -1,4 +1,5 @@
-chat = require("./.app/drupal-chat.js");
+chat = require("./.app/drupal-chat.js")
+
 config =
   port: 1234
   redis:
