@@ -5,7 +5,6 @@ var config          = {
   drupal: {}
 };
 var app             = chat(config);
-console.dir(app);
 
 app.start();
 
