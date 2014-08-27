@@ -41,7 +41,7 @@ task 'dev', 'Start dev env', ->
   watchingCompiler.stdout.pipe process.stdout
   watchingCompiler.stderr.pipe process.stderr
 
-  watcher  = spawn 'nodemon', ['-w','.app','server.js']
+  watcher  = spawn 'nodemon', ['-w','.app','-w','server.coffee','-x', 'coffee', 'server.coffee']
   watcher.stdout.pipe process.stdout
   watcher.stderr.pipe process.stderr
 
