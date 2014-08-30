@@ -12,6 +12,7 @@ log = (message, color, explanation) ->
   console.log color + message + reset + ' ' + (explanation or '')
 
 #test
+#TODO: to be implemented
 test = (cb) ->
   log "No test implemented yet :(", red
   return
@@ -44,5 +45,3 @@ task 'dev', 'Start dev env', ->
   watcher  = spawn 'nodemon', ['-w','.app','-w','server.coffee','-x', 'coffee', 'server.coffee']
   watcher.stdout.pipe process.stdout
   watcher.stderr.pipe process.stderr
-
-

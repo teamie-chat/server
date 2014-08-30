@@ -21,10 +21,13 @@
     "express": "^4.8.5",
     "hiredis": "^0.1.17",
     "moment": "^2.8.2",
+    "q": "^1.0.1",
     "redis": "^0.12.1",
-    "socket.io": "^1.0.6"
+    "socket.io": "^1.0.6",
+    "winston": "^0.7.3"
   },
   "devDependencies": {
+    "jsdoc": "^3.3.0-alpha9",
     "which": "^1.0.5"
   }
 }

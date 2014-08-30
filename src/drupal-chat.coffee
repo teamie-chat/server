@@ -1,9 +1,9 @@
 redis         = require "redis"
 
 ChatApp = (config) ->
-  this.start = ->
+  @start = ->
     console.log "Chat server is listening on port #{config.port}"
-  this.stop = ->
+  @stop = ->
     console.log "Chat server has stopped"
 
   return
