@@ -27,6 +27,8 @@
   },
   "devDependencies": {
     "jsdoc": "^3.3.0-alpha9",
+    "nodemon": "^1.2.1",
+    "coffee-script": "^1.7.1",
     "which": "^1.0.5"
   }
 }
