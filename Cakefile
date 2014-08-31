@@ -26,6 +26,14 @@ build = (cb) ->
   compiler.stderr.pipe process.stderr
   compiler.on "exit", (status) -> cb?() if status is 0
 
+#generating docs
+genDoc = (cb) ->
+  options = ['.app','-r','-d','docs']
+  cmd = which.sync 'jsdoc'
+  docGenerator = spawn cmd, options
+  docGenerator.stdout.pipe process.stdout
+  docGenerator.on "exit", (status) -> cb?() if status is 0
+
 #define tasks
 task 'build', 'Build project files', ->
   build -> log "Done.", green
@@ -33,6 +41,8 @@ task 'build', 'Build project files', ->
 task 'test', 'Build and run Mocha tests', ->
   build -> test -> log "Done.", green
 
+task 'gen-doc', 'Build and generate documents', ->
+  build -> genDoc -> log "Done, check docs/ :)", green
 
 task 'dev', 'Start dev env', ->
 

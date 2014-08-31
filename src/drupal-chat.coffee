@@ -1,10 +1,16 @@
 redis         = require "redis"
+logger        = require "./logger.js"
 
+###*
+Initialize a new chat server instance
+@constructor
+@param {object} configs chat server port, redis and drupal server
+###
 ChatApp = (config) ->
   @start = ->
-    console.log "Chat server is listening on port #{config.port}"
+    logger.info "Chat server is listening on port #{config.port}"
   @stop = ->
-    console.log "Chat server has stopped"
+    logger.warn "Chat server has stopped"
 
   return
 
