@@ -10,10 +10,11 @@ ChatApp = (config) ->
   @start = ->
     logger.info "Chat server is listening on port #{config.port}"
   @stop = ->
-    logger.warn "Chat server has stopped"
+    logger.info "Chat server has stopped"
 
   return
 
 
 module.exports = (config) ->
   return new ChatApp(config)
+

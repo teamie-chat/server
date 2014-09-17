@@ -7,10 +7,10 @@ config =
     address   : 'localhost'
     username  : 'redis'
     password  : 'pwd'
+    database  : 0
   drupal:
     port      : 3456
     address   : 'localhost'
 
-app = chat config
+app = chat(config)
 app.start()
-

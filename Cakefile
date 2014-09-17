@@ -12,9 +12,13 @@ log = (message, color, explanation) ->
   console.log color + message + reset + ' ' + (explanation or '')
 
 #test
-#TODO: to be implemented
 test = (cb) ->
-  log "No test implemented yet :(", red
+  options = ['test/unit']
+  cmd = which.sync 'nodeunit'
+  tester = spawn cmd, options
+  tester.stdout.pipe process.stdout
+  tester.stderr.pipe process.stderr
+  tester.on "exit", (status) -> cb?() if status is 0
   return
 
 #build
@@ -28,8 +32,8 @@ build = (cb) ->
 
 #generating docs
 genDoc = (cb) ->
-  options = ['.app','-r','-d','docs']
-  cmd = which.sync 'jsdoc'
+  options = ['src']
+  cmd = which.sync 'codo'
   docGenerator = spawn cmd, options
   docGenerator.stdout.pipe process.stdout
   docGenerator.on "exit", (status) -> cb?() if status is 0
@@ -41,8 +45,8 @@ task 'build', 'Build project files', ->
 task 'test', 'Build and run Mocha tests', ->
   build -> test -> log "Done.", green
 
-task 'gen-doc', 'Build and generate documents', ->
-  build -> genDoc -> log "Done, check docs/ :)", green
+task 'doc', 'Build and generate documents', ->
+  build -> genDoc -> log "Done, check doc/ :)", green
 
 task 'dev', 'Start dev env', ->
 
