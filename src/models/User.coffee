@@ -4,9 +4,10 @@ logger      = require "../logger.js"
 Q           = require "q"
 _           = require "lodash"
 
-oriRedisCli    = null
-redisCli    = null
+redisCli    = require("./ModelSettings").getRedisCli()
+oriRedisCli = redisCli.origin
 
+# TODO: put this constant in somewhere, it's reused in all models
 REDIS_KEYS  =
   USER_ID_GEN         : "user:%d:generator"
   USER_DETAILS        : "user:%d"
@@ -22,15 +23,11 @@ class User
   onError = (err) ->
     logger.error err
     throw err
-
-
-
-
   create = () ->
-
     return redisCli
       .incr(REDIS_KEYS.USER_ID_GEN)
       .then (id) ->
+
         that.id = id
         key = Util.format(REDIS_KEYS.USER_DETAILS,id)
         return redisCli.hmset(
@@ -39,7 +36,8 @@ class User
           "name", that.name
           "profileImage", that.profileImage
         )
-      .then () -> that
+      .then () ->
+        return that
       .fail onError
 
   retrieve = (id) ->
@@ -48,10 +46,15 @@ class User
 
     return redisCli
       .hgetall(key)
+      .then (obj)->
+        if (obj?)
+          obj.id = parseInt(obj.id)
+          return _.extend(new User(), obj) if obj?
+        else
+          return obj
       .fail onError
 
   update = (id) ->
-
     key = Util.format(REDIS_KEYS.USER_DETAILS,id)
     return redisCli
       .hmset(
@@ -64,10 +67,15 @@ class User
       .fail onError
 
   #delete is reserved
-  del = (id) ->
-    return
+  del = () ->
+    return if not that.id?
+
+    key = Util.format(REDIS_KEYS.USER_DETAILS,that.id)
+    return redisCli
+      .del(key)
 
   constructor: (@id,@name,@profileImage) ->
+    throw new Error("RedisCli is not initialized yet, call ModelSettings to set the client") if not redisCli?
     that = this
     return @
 
@@ -82,6 +90,11 @@ class User
       logger.debug "Updating a user:", @
       return update()
 
+  delete: () ->
+    return del()
+      .then (res)-> true
+      .fail onError
+
   ###*
   subscribe to one or multiple threads
   @param paramType argName param
@@ -92,16 +105,19 @@ class User
     threadIds = threads.map (thread) -> thread.id if thread instanceof Thread
 
   unsubscribe: (threadId) ->
+
   getSession: () ->
+    throw new Error ("Not yet implemented")
   setSession: () ->
+    throw new Error ("Not yet implemented")
+
+  getThreadsIds: (start,end)->
+    key = Util.format(REDIS_KEYS.USER_THREADS,@id)
+    return redisCli
+      .zrange(key,start,end)
+      .fail onError
 
   @getUserById: (id) -> return retrieve(id)
-  @getUserBySession: (session) -> 0
+  @getUserBySession: (session) -> new User()
 
-module.exports = (aRedisCli) ->
-  throw Error("Redis client is not passed in") if !aRedisCli?
-
-  redisCli = aRedisCli
-  oriRedisCli = redisCli.origin
-
-  return User
+module.exports = User
